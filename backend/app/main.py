@@ -8,22 +8,17 @@ import sys
 
 from app.api.v1.router import api_router
 from app.core.config import settings
+from app.core.logging_config import setup_logging
+
+# Configure logging first
+setup_logging(level="DEBUG" if settings.DEBUG else "INFO")
+logger = logging.getLogger(__name__)
 
 # Validate configuration on startup
 try:
     settings.validate_credentials()
 except ValueError as e:
     logger.warning(f"Configuration validation warning: {e}")
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(
