@@ -46,6 +46,9 @@ class StrategyService:
                 return {"status": "already_running", "message": "Strategy is already running"}
             
             try:
+                # Validate credentials before starting
+                settings.validate_credentials()
+                
                 # Initialize strategy
                 self.strategy = VWAPStrategy(
                     vwap_deviation=settings.VWAP_DEVIATION,
