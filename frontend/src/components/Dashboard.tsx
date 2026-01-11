@@ -7,13 +7,17 @@ export default function Dashboard() {
   const [vwapData, setVWAPData] = useState<VWAPData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchStatus = async () => {
     try {
+      setError(null)
       const data = await apiService.getStatus()
       setStatus(data)
+      setIsLoading(false)
     } catch (err: any) {
       setError(err.message || 'Failed to fetch status')
+      setIsLoading(false)
     }
   }
 
@@ -23,6 +27,7 @@ export default function Dashboard() {
       setVWAPData(data)
     } catch (err: any) {
       console.error('Error fetching VWAP:', err)
+      // Don't set error state for VWAP, just log
     }
   }
 
@@ -72,6 +77,12 @@ export default function Dashboard() {
         {error && (
           <div className="error-message">
             {error}
+          </div>
+        )}
+
+        {isLoading && (
+          <div className="loading-message">
+            Loading...
           </div>
         )}
 
