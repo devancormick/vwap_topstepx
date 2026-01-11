@@ -84,6 +84,8 @@ Press `Ctrl+C` to stop the strategy gracefully.
 
 ## Strategy Logic
 
+![VWAP Trading Strategy](VWAP-Based%20Trading%20Strategy.png)
+
 - **Long Entry**: Place BUY limit order when current price ≤ VWAP - deviation
 - **Short Entry**: Place SELL limit order when current price ≥ VWAP + deviation
 - **Position Management**: Only one trade at a time; skips order placement if position exists
