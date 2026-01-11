@@ -9,6 +9,12 @@ import sys
 from app.api.v1.router import api_router
 from app.core.config import settings
 
+# Validate configuration on startup
+try:
+    settings.validate_credentials()
+except ValueError as e:
+    logger.warning(f"Configuration validation warning: {e}")
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,

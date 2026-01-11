@@ -29,6 +29,13 @@ class Settings(BaseSettings):
     PROJECT_X_API_KEY: str = os.getenv("PROJECT_X_API_KEY", "")
     PROJECT_X_USERNAME: str = os.getenv("PROJECT_X_USERNAME", "")
     
+    def validate_credentials(self):
+        """Validate that required credentials are set."""
+        if not self.PROJECT_X_API_KEY or not self.PROJECT_X_USERNAME:
+            raise ValueError(
+                "PROJECT_X_API_KEY and PROJECT_X_USERNAME must be set"
+            )
+    
     # Strategy configuration (with defaults)
     VWAP_DEVIATION: float = float(os.getenv("VWAP_DEVIATION", "2.0"))
     TIMER_INTERVAL: int = int(os.getenv("TIMER_INTERVAL", "1800"))
