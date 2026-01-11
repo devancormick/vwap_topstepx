@@ -1,4 +1,4 @@
 project-x-py>=1.0.3
 pandas>=1.5.0
-python-dotenv>=1.0.0
+python-dotenv>=1.0.0; python_version>='3.7'
 
