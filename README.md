@@ -6,6 +6,8 @@ A minimal viable product (MVP) VWAP-based automated trading strategy using the T
 
 This strategy calculates Volume Weighted Average Price (VWAP) from historical market data and places limit orders at VWAP deviation bands for Micro Gold Future (MGC) contracts. Orders are placed on a configurable timer, and the strategy maintains only one trade at a time.
 
+![Architecture Diagram](architecture.png)
+
 ## Features
 
 - VWAP calculation from historical market data
