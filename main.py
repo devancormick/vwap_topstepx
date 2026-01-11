@@ -1,12 +1,17 @@
 """Main entry point for VWAP trading strategy."""
 
 import logging
-from dotenv import load_dotenv
 import config
 from vwap_strategy import VWAPStrategy
 
-# Load environment variables from .env file
-load_dotenv()
+# Optionally load environment variables from .env file (if it exists)
+# Environment variables can also be set directly in the system
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv is optional - environment variables can be set directly
+    pass
 
 # Configure logging
 logging.basicConfig(
