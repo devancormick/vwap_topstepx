@@ -1,86 +1,189 @@
-# VWAP-Based Automated Trading Strategy for TopstepX
+# VWAP-Based Automated Trading Strategy - Enterprise Production Application
 
-A minimal viable product (MVP) VWAP-based automated trading strategy using the TopstepX API (`project-x-py`).
-
-## Overview
-
-This strategy calculates Volume Weighted Average Price (VWAP) from historical market data and places limit orders at VWAP deviation bands for Micro Gold Future (MGC) contracts. Orders are placed on a configurable timer, and the strategy maintains only one trade at a time.
+A production-ready VWAP-based automated trading strategy application with REST API backend and React frontend dashboard for TopstepX.
 
 ![Architecture Diagram](architecture.png)
 
+## Architecture
+
+This is a full-stack enterprise application with:
+
+- **Backend**: FastAPI REST API (Python)
+- **Frontend**: React + TypeScript dashboard
+- **Containerization**: Docker & Docker Compose
+- **Production Ready**: Proper error handling, logging, and configuration management
+
 ## Features
 
-- VWAP calculation from historical market data
-- Entry logic at VWAP ± deviation (configurable: 2.0 or 3.0)
-- Timer-based order placement (default: every 30 minutes)
-- Single position management (one trade at a time)
-- Configurable parameters (deviation, timer interval, contract size)
+- 🎯 VWAP calculation from historical market data
+- 📊 Real-time dashboard for monitoring strategy status
+- 🎛️ Web-based controls to start/stop strategy
+- 📈 Live VWAP data and entry point visualization
+- ⚙️ Configurable parameters via environment variables
+- 🐳 Docker containerization for easy deployment
+- 🔒 Production-ready security and error handling
+
+## Project Structure
+
+```
+vwap_topstepx/
+├── backend/                 # FastAPI backend application
+│   ├── app/
+│   │   ├── api/            # API routes
+│   │   ├── core/           # Core configuration
+│   │   ├── services/       # Business logic services
+│   │   └── main.py         # Application entry point
+│   ├── requirements.txt    # Python dependencies
+│   └── Dockerfile          # Backend container
+├── frontend/               # React frontend application
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   ├── services/       # API client
+│   │   └── App.tsx         # Main app component
+│   ├── package.json        # Node dependencies
+│   └── Dockerfile          # Frontend container
+├── docker-compose.yml      # Docker Compose configuration
+├── vwap_strategy.py        # Core strategy implementation
+├── config.py               # Configuration module
+└── README.md               # This file
+```
 
 ## Prerequisites
 
-1. **TopstepX API Access**: Subscribe to TopstepX API access and obtain your API credentials
-2. **Python 3.7+**: Ensure Python is installed on your system
-3. **API Credentials**: API key and username from TopstepX
+- **Docker & Docker Compose** (recommended for production)
+- **OR** Python 3.11+ and Node.js 18+ for local development
+- **TopstepX API Access** with API credentials
 
-## Installation
+## Quick Start with Docker (Recommended)
 
-1. Install dependencies:
+1. **Clone the repository**
+
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and add your TopstepX credentials:
+   ```env
+   PROJECT_X_API_KEY=your_api_key_here
+   PROJECT_X_USERNAME=your_username_here
+   ```
+
+3. **Start the application**
+   ```bash
+   docker-compose up -d
+   ```
+
+4. **Access the application**
+   - Frontend Dashboard: http://localhost:3000
+   - Backend API: http://localhost:8000
+   - API Documentation: http://localhost:8000/api/docs
+
+## Manual Installation
+
+### Backend Setup
+
+1. **Navigate to backend directory**
+   ```bash
+   cd backend
+   ```
+
+2. **Create virtual environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. Set up environment variables:
+4. **Set environment variables**
+   ```bash
+   export PROJECT_X_API_KEY=your_api_key_here
+   export PROJECT_X_USERNAME=your_username_here
+   ```
 
-   **Option 1: Using a .env file (recommended for local development)**
-   - Copy `.env.example` to `.env`
-   - Fill in your TopstepX API credentials in `.env`:
-     ```
-     PROJECT_X_API_KEY=your_api_key_here
-     PROJECT_X_USERNAME=your_username_here
-     ```
-   
-   **Option 2: Set environment variables directly (recommended for production)**
-   - Linux/Mac:
-     ```bash
-     export PROJECT_X_API_KEY=your_api_key_here
-     export PROJECT_X_USERNAME=your_username_here
-     ```
-   - Windows (PowerShell):
-     ```powershell
-     $env:PROJECT_X_API_KEY="your_api_key_here"
-     $env:PROJECT_X_USERNAME="your_username_here"
-     ```
-   - Windows (CMD):
-     ```cmd
-     set PROJECT_X_API_KEY=your_api_key_here
-     set PROJECT_X_USERNAME=your_username_here
-     ```
-   
-   Note: The `.env` file is optional. If it doesn't exist, the application will use system environment variables.
+5. **Run the backend**
+   ```bash
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+### Frontend Setup
+
+1. **Navigate to frontend directory**
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set environment variables** (optional)
+   ```bash
+   export VITE_API_URL=http://localhost:8000
+   ```
+
+4. **Run the frontend**
+   ```bash
+   npm run dev
+   ```
+
+5. **Access the dashboard**
+   - Open http://localhost:3000 in your browser
 
 ## Configuration
 
-Edit `config.py` or set environment variables to configure:
-- `VWAP_DEVIATION`: Deviation from VWAP for entry points (default: 2.0)
-- `TIMER_INTERVAL`: Time interval between order checks in seconds (default: 1800 = 30 minutes)
+Configuration is managed through environment variables:
+
+### Required Environment Variables
+
+- `PROJECT_X_API_KEY`: TopstepX API key
+- `PROJECT_X_USERNAME`: TopstepX username
+
+### Optional Configuration
+
+- `VWAP_DEVIATION`: Deviation from VWAP (default: 2.0)
+- `TIMER_INTERVAL`: Order check interval in seconds (default: 1800 = 30 min)
 - `CONTRACT_SIZE`: Number of contracts per trade (default: 1)
 - `INSTRUMENT`: Trading instrument symbol (default: 'MGC')
+- `DEBUG`: Enable debug mode (default: false)
+- `HOST`: Backend host (default: 0.0.0.0)
+- `PORT`: Backend port (default: 8000)
 
-## Usage
+## API Endpoints
 
-Run the strategy:
-```bash
-python main.py
-```
+The backend provides the following REST API endpoints:
 
-The strategy will:
-1. Check for existing open positions
-2. Fetch historical market data and calculate VWAP
-3. Determine entry points based on VWAP deviation
-4. Place limit orders if price conditions are met
-5. Repeat on the configured timer interval
+### Status & Health
 
-Press `Ctrl+C` to stop the strategy gracefully.
+- `GET /api/v1/status` - Get API status
+- `GET /api/v1/status/health` - Health check
+- `GET /health` - Root health check
+
+### Strategy Control
+
+- `GET /api/v1/strategy/status` - Get strategy status
+- `POST /api/v1/strategy/control` - Start/stop strategy
+  ```json
+  {
+    "action": "start"  // or "stop"
+  }
+  ```
+- `GET /api/v1/strategy/vwap` - Get current VWAP data
+- `GET /api/v1/strategy/positions` - Get current positions
+
+### Configuration
+
+- `GET /api/v1/config` - Get current configuration
+
+### API Documentation
+
+Interactive API documentation is available at:
+- Swagger UI: http://localhost:8000/api/docs
+- ReDoc: http://localhost:8000/api/redoc
 
 ## Strategy Logic
 
@@ -90,62 +193,75 @@ Press `Ctrl+C` to stop the strategy gracefully.
 - **Short Entry**: Place SELL limit order when current price ≥ VWAP + deviation
 - **Position Management**: Only one trade at a time; skips order placement if position exists
 
+## Production Deployment
+
+### Docker Deployment
+
+The application is containerized and ready for production deployment:
+
+```bash
+# Build and start
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+### Cloud Deployment
+
+The application can be deployed to:
+- **AWS**: ECS, EKS, or EC2
+- **Google Cloud**: Cloud Run, GKE
+- **Azure**: Container Instances, AKS
+- **DigitalOcean**: App Platform, Droplets
+
+### Environment Setup for Production
+
+1. Set environment variables securely (use secrets management)
+2. Configure CORS origins in `backend/app/core/config.py`
+3. Enable HTTPS/TLS for production
+4. Set up monitoring and logging
+5. Configure database for trade history (optional)
+
+## Development
+
+### Running Tests
+
+```bash
+# Backend tests (when available)
+cd backend
+pytest
+
+# Frontend tests (when available)
+cd frontend
+npm test
+```
+
+### Code Structure
+
+- **Backend**: FastAPI with clean architecture
+  - `app/api/` - API routes and endpoints
+  - `app/services/` - Business logic
+  - `app/core/` - Configuration and shared utilities
+
+- **Frontend**: React with TypeScript
+  - `src/components/` - React components
+  - `src/services/` - API client services
+
 ## Important Notes
+
+⚠️ **Production Considerations**
 
 - Test thoroughly in a simulated/paper trading environment before live trading
 - Ensure compliance with Topstep's terms of use
-- Monitor the strategy and implement appropriate risk management
+- Implement proper risk management and monitoring
+- Use secure secrets management for API credentials
+- Monitor the application and implement alerting
 - API method names may need adjustment based on actual `project-x-py` documentation
-
-## Future Trajectory
-
-After successful testing, this MVP could evolve in a prop trading setup through the following enhancements:
-
-### Risk Management
-- **Dynamic position sizing**: Implement Kelly Criterion or fixed fractional position sizing based on account equity
-- **Stop-loss and take-profit**: Add automated exit logic with trailing stops and profit targets
-- **Daily loss limits**: Implement maximum drawdown and daily loss limits to protect capital
-- **Volatility-adjusted entries**: Adjust deviation thresholds based on market volatility (ATR, VIX)
-
-### Multi-Instrument & Portfolio Management
-- **Multi-symbol support**: Extend strategy to trade multiple instruments simultaneously (ES, NQ, YM, etc.)
-- **Correlation analysis**: Implement portfolio-level risk management considering instrument correlations
-- **Capital allocation**: Distribute capital across multiple instruments based on Sharpe ratios and market conditions
-- **Cross-asset opportunities**: Extend VWAP strategy to other asset classes (forex, crypto, equities)
-
-### Advanced Strategy Features
-- **Multiple timeframe analysis**: Incorporate VWAP calculations across different timeframes (15min, 1hr, daily)
-- **Volume profile integration**: Combine VWAP with Volume Profile analysis for better entry/exit points
-- **Mean reversion filters**: Add additional filters (RSI, Bollinger Bands) to improve entry quality
-- **Market regime detection**: Adapt strategy parameters based on trending vs. ranging market conditions
-
-### Performance & Analytics
-- **Backtesting framework**: Implement comprehensive backtesting with historical data and performance metrics
-- **Real-time monitoring dashboard**: Build web-based dashboard for live P&L, drawdown, win rate, and position monitoring
-- **Performance analytics**: Track Sharpe ratio, Sortino ratio, maximum drawdown, and other key metrics
-- **Trade journaling**: Log all trades with context for post-analysis and strategy refinement
-
-### Infrastructure & Operations
-- **Database integration**: Store trade history, market data, and performance metrics in a database
-- **Alerting system**: Implement notifications (email, SMS, Slack) for critical events (large losses, system errors)
-- **Deployment automation**: Containerize with Docker and deploy to cloud infrastructure (AWS, GCP)
-- **High availability**: Implement redundancy, failover mechanisms, and automatic recovery
-
-### Machine Learning & AI
-- **Parameter optimization**: Use ML to optimize VWAP deviation, timer intervals, and position sizing
-- **Pattern recognition**: Integrate ML models to identify optimal market conditions for strategy execution
-- **Predictive models**: Enhance entry signals with predictive analytics based on market microstructure
-- **Adaptive learning**: Implement reinforcement learning to continuously improve strategy performance
-
-### Integration & Scaling
-- **Order management system (OMS)**: Integrate with professional OMS for advanced order types and execution
-- **Market data feeds**: Upgrade to professional market data providers for lower latency and higher quality data
-- **Co-location**: Deploy strategy servers closer to exchange matching engines for reduced latency
-- **API rate limiting**: Implement sophisticated rate limiting and order throttling for compliance
-
-This evolution path transforms the MVP from a simple single-instrument strategy into a robust, scalable prop trading system capable of managing multiple strategies and instruments simultaneously while maintaining strict risk controls and performance monitoring.
 
 ## License
 
-This is a sample implementation for testing purposes.
-
+This is an enterprise production application for trading purposes.
