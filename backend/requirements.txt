@@ -1,0 +1,19 @@
+# FastAPI and server
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# TopstepX API
+project-x-py>=1.0.3
+
+# Data processing
+pandas>=1.5.0
+numpy>=1.20.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# CORS
+python-multipart>=0.0.6
+

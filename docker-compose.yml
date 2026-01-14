@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    container_name: vwap_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PROJECT_X_API_KEY=${PROJECT_X_API_KEY}
+      - PROJECT_X_USERNAME=${PROJECT_X_USERNAME}
+      - VWAP_DEVIATION=${VWAP_DEVIATION:-2.0}
+      - TIMER_INTERVAL=${TIMER_INTERVAL:-1800}
+      - CONTRACT_SIZE=${CONTRACT_SIZE:-1}
+      - INSTRUMENT=${INSTRUMENT:-MGC}
+      - DEBUG=${DEBUG:-false}
+      - HOST=0.0.0.0
+      - PORT=8000
+    volumes:
+      - ./backend/app:/app/app
+      - ./vwap_strategy.py:/app/vwap_strategy.py
+      - ./config.py:/app/config.py
+    restart: unless-stopped
+    networks:
+      - vwap_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vwap_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - vwap_network
+
+networks:
+  vwap_network:
+    driver: bridge
+
